@@ -94,4 +94,29 @@ public class StringMapList extends ArrayList<StringMap> {
 		
 		return buff.toString();
 	}
+	
+	
+	public StringMap find(String key, String value) {
+		StringMap oneMap = null;
+		String oneValue = null;
+		
+		int count = this.size();
+		for (int i=0; i<count; i++) {
+			oneMap = this.get(i);
+			if (oneMap == null) {
+				continue;
+			}
+			
+			oneValue = oneMap.get(key);
+			if (oneValue == null || oneValue.length() == 0) {
+				continue;
+			}
+			
+			if (oneValue.equals(value)) {
+				return oneMap;
+			}
+		}
+		
+		return null;
+	}
 }
