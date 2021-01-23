@@ -3,17 +3,14 @@ package com.thkmon.blogparser.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.HashMap;
+import java.sql.SQLException;
 
 import com.thkmon.blogparser.common.Const;
 
 public class SimpleDBUtil {
 	
-	private static final HashMap<String, String> optionProperties = Const.optionProperties;
-	
-	// Cafe24 MySQL 에서 AWS MariaDB로 변경
 	private static final String jdbcUrl =
-	"jdbc:mysql://" + optionProperties.get("url") + ":" + optionProperties.get("port") + "/" + optionProperties.get("db") + "?"
+	"jdbc:mysql://" + Const.DB_URL + ":" + Const.DB_PORT + "/" + Const.DB_NAME + "?"
 	+ "userUnicode=true&characterEncoding=utf8"
 	+ "&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
 	
@@ -24,9 +21,6 @@ public class SimpleDBUtil {
 	
 	+ "&useSSL=true";
 	
-	private static final String dbUser = optionProperties.get("user");
-	private static final String dbPass = optionProperties.get("password");
-	
 	
 	public static Connection getConnection() {
 		Connection conn = null;
@@ -35,8 +29,11 @@ public class SimpleDBUtil {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			
 			// 데이터베이스 커넥션 생성
-			conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPass);
+			conn = DriverManager.getConnection(jdbcUrl, Const.DB_USER, Const.DB_PASSWORD);
 			conn.setAutoCommit(false);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -52,7 +49,9 @@ public class SimpleDBUtil {
 				pst.close();
 			}
 			
+		} catch (SQLException e) {
 		} catch (Exception e) {
+		} finally {
 			pst = null;
 		}
 	}
@@ -65,6 +64,7 @@ public class SimpleDBUtil {
 				conn.rollback();
 			}
 			
+		} catch (SQLException e) {
 		} catch (Exception e) {
 		}
 		
@@ -73,9 +73,10 @@ public class SimpleDBUtil {
 				conn.close();
 			}
 			
+		} catch (SQLException e) {
 		} catch (Exception e) {
+		} finally {
 			conn = null;
-			
 		}
 	}
 	
@@ -87,6 +88,7 @@ public class SimpleDBUtil {
 				conn.rollback();
 			}
 			
+		} catch (SQLException e) {
 		} catch (Exception e) {
 		}
 	}
@@ -99,6 +101,7 @@ public class SimpleDBUtil {
 				conn.commit();
 			}
 			
+		} catch (SQLException e) {
 		} catch (Exception e) {
 		}
 		
@@ -107,7 +110,9 @@ public class SimpleDBUtil {
 				conn.close();
 			}
 			
+		} catch (SQLException e) {
 		} catch (Exception e) {
+		} finally {
 			conn = null;
 		}
 	}
