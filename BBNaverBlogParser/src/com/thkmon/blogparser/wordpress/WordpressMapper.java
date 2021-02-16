@@ -11,7 +11,10 @@ import org.jsoup.select.Elements;
 
 import com.thkmon.blogparser.database.SimpleDBMapper;
 import com.thkmon.blogparser.database.SimpleDBUtil;
+import com.thkmon.blogparser.prototype.BasicMap;
+import com.thkmon.blogparser.prototype.BasicMapList;
 import com.thkmon.blogparser.prototype.ObjList;
+import com.thkmon.blogparser.prototype.StringList;
 import com.thkmon.blogparser.prototype.StringMap;
 import com.thkmon.blogparser.util.FolderUtil;
 import com.thkmon.blogparser.util.ImageUtil;
@@ -96,7 +99,7 @@ public class WordpressMapper {
 			}
 			
 			
-			// 포스트 내용 보정 (이미지)
+			// 포스트 내용 보정 (이미지 상대경로화)
 			strHtml = revisePostContents(postNo, strHtml);
 			
 			
@@ -323,7 +326,7 @@ public class WordpressMapper {
 			}
 			
 			
-			// 포스트 내용 보정 (이미지)
+			// 포스트 내용 보정 (이미지 상대경로화)
 			strHtml = revisePostContents(postNo, strHtml);
 			
 			
@@ -409,7 +412,58 @@ public class WordpressMapper {
 	
 	
 	/**
-	 * 포스트 내용 보정 (이미지, 표)
+	 * 블로그 이미지 경로가 포함되어있는 워드프레스 포스트 목록 가져오기
+	 * 
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public StringList getPostNoListHavingBlogImages() throws SQLException, Exception {
+		StringList resultList = new StringList();
+		
+		Connection conn = null;
+		SimpleDBMapper mapper = new SimpleDBMapper();
+		
+		try {
+			conn = SimpleDBUtil.getConnection();
+			
+			String query = " SELECT post_name, post_content FROM wp_posts ";
+
+			BasicMapList list = mapper.select(conn, query, null);
+			if (list != null && list.size() > 0) {
+				BasicMap map = null;
+				
+				int listCount = list.size();
+				for (int i=0; i<listCount; i++) {
+					map = list.get(i);
+					if (map == null) {
+						continue;
+					}
+					
+					String postContent = String.valueOf(map.get("post_content"));
+					if (postContent.indexOf("img src=\"https://blogfiles.pstatic.net") > -1) {
+					// if (postContent.indexOf("img src") > -1) {
+						resultList.add(String.valueOf(map.get("post_name")));
+					}
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw e;
+			
+		} catch (Exception e) {
+			throw e;
+
+		} finally {
+			SimpleDBUtil.rollbackAndClose(conn);
+		}
+		
+		return resultList;
+	}
+	
+	
+	/**
+	 * 포스트 내용 보정 (이미지 상대경로화)
 	 * 
 	 * @param postNo
 	 * @param strHtml
@@ -418,6 +472,18 @@ public class WordpressMapper {
 	private String revisePostContents(String postNo, String strHtml) {
 		if (strHtml == null || strHtml.length() == 0) {
 			return "";
+		}
+		
+		String parentFolderPath = "C:\\wordpress_data\\imgs\\";
+		File parentFolderObj = new File(parentFolderPath);
+		if (!parentFolderObj.exists()) {
+			System.err.println("The folder does not exists. (" + parentFolderObj.getAbsolutePath() + ")");
+			return strHtml;
+		}
+		
+		File dir = new File(parentFolderPath + postNo + "\\");
+		if (dir.exists()) {
+			FolderUtil.deleteFolder(dir.getAbsolutePath());
 		}
 		
 		Document contentsDoc = Jsoup.parse(strHtml);
@@ -459,12 +525,7 @@ public class WordpressMapper {
 						fileExtOnly = "png";
 					}
 					
-					File dir = new File("C:\\wordpress_data\\imgs\\" + postNo + "\\");
-					if (dir.exists()) {
-						FolderUtil.deleteFolder(dir.getAbsolutePath());
-					}
-					
-					String savePath = "C:\\wordpress_data\\imgs\\" + postNo + "\\" + String.format("%04d", i + 1) + "." + fileExtOnly;
+					String savePath = parentFolderPath + postNo + "\\" + String.format("%04d", i + 1) + "." + fileExtOnly;
 					String newImgSrc = "/imgs/" + postNo + "/" + String.format("%04d", i + 1) + "." + fileExtOnly;
 					
 					if (ImageUtil.downloadImgFromUrl(realImgUrl, savePath)) {

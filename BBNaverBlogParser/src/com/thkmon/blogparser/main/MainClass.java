@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.thkmon.blogparser.common.Const;
+import com.thkmon.blogparser.prototype.StringList;
 import com.thkmon.blogparser.prototype.StringMap;
 import com.thkmon.blogparser.prototype.StringMapList;
 import com.thkmon.blogparser.util.HttpUtil;
@@ -28,10 +29,13 @@ public class MainClass {
 			MainClass mainCls = new MainClass();
 			
 			// 1. 최근 포스트 인서트 기능
-			// mainCls.insertRecentPosts();
+			mainCls.insertRecentPosts();
 			
 			// 2. 특정 포스트 업데이트 기능
-			// mainCls.updatePost("222237954742");
+			// mainCls.updatePost("70171023241");
+			
+			// 블로그 이미지 경로가 포함되어있는 워드프레스 포스트들만 가져와서 내용 업데이트. 이미지 파일은 따로 FTP 업로드 해야함
+			// mainCls.updatePostHavingImages();
 			
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -78,6 +82,28 @@ public class MainClass {
 	private void updatePost(String postNo) throws SQLException, Exception {
 		WordpressMapper wordpressMapper = new WordpressMapper();
 		wordpressMapper.updateWordpressPostFromNaverBlogPost(wordpressUrl, naverUserId, postNo);
+	}
+	
+	
+	
+	/**
+	 * 블로그 이미지 경로가 포함되어있는 워드프레스 포스트들만 가져와서 내용 업데이트. 이미지 파일은 따로 FTP 업로드 해야함
+	 * 
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	private void updatePostHavingImages() throws SQLException, Exception {
+		WordpressMapper wordpressMapper = new WordpressMapper();
+		StringList postNoList = wordpressMapper.getPostNoListHavingBlogImages();
+		if (postNoList != null) {
+			System.out.println("postNoList.size() : " + postNoList.size());
+			if (postNoList.size() > 0) {
+				System.out.println("postNoList : " + postNoList);
+				for (String postNo : postNoList) {
+					this.updatePost(postNo);
+				}
+			}
+		}
 	}
 	
 	

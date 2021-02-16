@@ -205,6 +205,11 @@ public class SimpleDBMapper {
 		
 		query = query.trim();
 		
+		// 쿼리 출력 시 500자까지만 출력
+		if (query.length() > 500) {
+			query = query.substring(0, 500) + "...";
+		}
+		
 		return "getQueryString : " + query + ";";
 	}
 	
