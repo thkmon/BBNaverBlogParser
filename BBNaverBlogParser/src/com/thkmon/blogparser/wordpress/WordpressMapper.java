@@ -1,5 +1,6 @@
 package com.thkmon.blogparser.wordpress;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -12,12 +13,14 @@ import com.thkmon.blogparser.database.SimpleDBMapper;
 import com.thkmon.blogparser.database.SimpleDBUtil;
 import com.thkmon.blogparser.prototype.ObjList;
 import com.thkmon.blogparser.prototype.StringMap;
+import com.thkmon.blogparser.util.FolderUtil;
+import com.thkmon.blogparser.util.ImageUtil;
 
 public class WordpressMapper {
 	
 	
 	/**
-	 * ³×ÀÌ¹ö ºí·Î±× Æ÷½ºÆ®¸¦ °¡Á®¿Í¼­ ¿öµåÇÁ·¹½º DB ¿¡ insert ÇÑ´Ù.
+	 * ë„¤ì´ë²„ ë¸”ë¡œê·¸ í¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì™€ì„œ ì›Œë“œí”„ë ˆìŠ¤ DB ì— insert í•œë‹¤.
 	 * 
 	 * @param wordpressUrl
 	 * @param naverUserId
@@ -69,14 +72,14 @@ public class WordpressMapper {
 			Elements postViewAreas = doc.select("#postViewArea");
 			
 			
-			// ½º¸¶Æ®¿¡µðÅÍ 3.0 ¿©ºÎ
+			// ìŠ¤ë§ˆíŠ¸ì—ë””í„° 3.0 ì—¬ë¶€
 			boolean isSmartEditor3 = false;
 			if (postViewAreas == null || postViewAreas.size() == 0) {
 				isSmartEditor3 = true;
 			}
 			
 			
-			// Æ÷½ºÆ® ³»¿ë °¡Á®¿À±â
+			// í¬ìŠ¤íŠ¸ ë‚´ìš© ê°€ì ¸ì˜¤ê¸°
 			String strHtml = "";
 			if (!isSmartEditor3) {
 				Element postViewArea = postViewAreas.get(0);
@@ -88,9 +91,13 @@ public class WordpressMapper {
 			}
 			
 			if (strHtml == null || strHtml.length() == 0) {
-				System.out.println("Æ÷½ºÆ® ³»¿ëÀ» °¡Á®¿Ã ¼ö ¾ø½À´Ï´Ù. (postNo : " + postNo + ")");
+				System.out.println("í¬ìŠ¤íŠ¸ ë‚´ìš©ì„ ê°€ì ¸ì˜¬ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. (postNo : " + postNo + ")");
 				return;
 			}
+			
+			
+			// í¬ìŠ¤íŠ¸ ë‚´ìš© ë³´ì • (ì´ë¯¸ì§€)
+			strHtml = revisePostContents(postNo, strHtml);
 			
 			
 			int nextID = 0;
@@ -163,7 +170,7 @@ public class WordpressMapper {
 				try {
 					Integer.parseInt(strDateArr[0].trim());
 				} catch (NumberFormatException e) {
-					System.err.println("ÇÏ·ç°¡ Áö³ªÁö ¾ÊÀº Æ÷½ºÆ®´Â ¾÷·ÎµåÇÒ ¼ö ¾ø½À´Ï´Ù.");
+					System.err.println("í•˜ë£¨ê°€ ì§€ë‚˜ì§€ ì•Šì€ í¬ìŠ¤íŠ¸ëŠ” ì—…ë¡œë“œí•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 					return;
 				}
 				
@@ -218,7 +225,7 @@ public class WordpressMapper {
 	
 	
 	/**
-	 * ³×ÀÌ¹ö ºí·Î±× Æ÷½ºÆ®¸¦ °¡Á®¿Í¼­ ¿öµåÇÁ·¹½º DB ¿¡ insert ÇÑ´Ù.
+	 * ë„¤ì´ë²„ ë¸”ë¡œê·¸ í¬ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì™€ì„œ ì›Œë“œí”„ë ˆìŠ¤ DB ì— insert í•œë‹¤.
 	 * 
 	 * @param wordpressUrl
 	 * @param naverUserId
@@ -265,7 +272,7 @@ public class WordpressMapper {
 
 				postID = mapper.selectFirstString(conn, query, objList, "");
 				if (postID == null || postID.length() == 0) {
-					System.out.println("¾÷µ¥ÀÌÆ®ÇÒ ·Î¿ì¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù. (postNo : " + postNo + ")");
+					System.out.println("ì—…ë°ì´íŠ¸í•  ë¡œìš°ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. (postNo : " + postNo + ")");
 					return;
 				}
 			}
@@ -277,14 +284,14 @@ public class WordpressMapper {
 			Elements postViewAreas = doc.select("#postViewArea");
 			
 			
-			// ½º¸¶Æ®¿¡µðÅÍ 3.0 ¿©ºÎ
+			// ìŠ¤ë§ˆíŠ¸ì—ë””í„° 3.0 ì—¬ë¶€
 			boolean isSmartEditor3 = false;
 			if (postViewAreas == null || postViewAreas.size() == 0) {
 				isSmartEditor3 = true;
 			}
 			
 			
-			// Æ÷½ºÆ® ³»¿ë °¡Á®¿À±â
+			// í¬ìŠ¤íŠ¸ ë‚´ìš© ê°€ì ¸ì˜¤ê¸°
 			String strHtml = "";
 			if (!isSmartEditor3) {
 				Element postViewArea = postViewAreas.get(0);
@@ -296,24 +303,28 @@ public class WordpressMapper {
 			}
 			
 			if (strHtml == null || strHtml.length() == 0) {
-				System.out.println("Æ÷½ºÆ® ³»¿ëÀ» °¡Á®¿Ã ¼ö ¾ø½À´Ï´Ù. (postNo : " + postNo + ")");
+				System.out.println("í¬ìŠ¤íŠ¸ ë‚´ìš©ì„ ê°€ì ¸ì˜¬ ìˆ˜ ì—†ìŠµë‹ˆë‹¤. (postNo : " + postNo + ")");
 				return;
 			}
 			
 			
-			// Æ÷½ºÆ® Á¦¸ñ °¡Á®¿À±â
+			// í¬ìŠ¤íŠ¸ ì œëª© ê°€ì ¸ì˜¤ê¸°
 			String strTitle = "";
 			try {
 				if (!isSmartEditor3) {
 					strTitle = doc.select(".itemSubjectBoldfont").get(0).html().trim();
 				}
 			} catch (NullPointerException e) {
-				// Á¦¸ñÀ» ¸ø°¡Á®¿À´Â °æ¿ì Á¦¸ñ¸¸ Á¦¿ÜÇÏ°í ³ª¸ÓÁö ¾÷µ¥ÀÌÆ® ÁøÇà
+				// ì œëª©ì„ ëª»ê°€ì ¸ì˜¤ëŠ” ê²½ìš° ì œëª©ë§Œ ì œì™¸í•˜ê³  ë‚˜ë¨¸ì§€ ì—…ë°ì´íŠ¸ ì§„í–‰
 				strTitle = "";
 			} catch (Exception e) {
-				// Á¦¸ñÀ» ¸ø°¡Á®¿À´Â °æ¿ì Á¦¸ñ¸¸ Á¦¿ÜÇÏ°í ³ª¸ÓÁö ¾÷µ¥ÀÌÆ® ÁøÇà
+				// ì œëª©ì„ ëª»ê°€ì ¸ì˜¤ëŠ” ê²½ìš° ì œëª©ë§Œ ì œì™¸í•˜ê³  ë‚˜ë¨¸ì§€ ì—…ë°ì´íŠ¸ ì§„í–‰
 				strTitle = "";
 			}
+			
+			
+			// í¬ìŠ¤íŠ¸ ë‚´ìš© ë³´ì • (ì´ë¯¸ì§€)
+			strHtml = revisePostContents(postNo, strHtml);
 			
 			
 			{
@@ -394,5 +405,75 @@ public class WordpressMapper {
 		} finally {
 			SimpleDBUtil.rollbackAndClose(conn);
 		}
+	}
+	
+	
+	/**
+	 * í¬ìŠ¤íŠ¸ ë‚´ìš© ë³´ì • (ì´ë¯¸ì§€, í‘œ)
+	 * 
+	 * @param postNo
+	 * @param strHtml
+	 * @return
+	 */
+	private String revisePostContents(String postNo, String strHtml) {
+		if (strHtml == null || strHtml.length() == 0) {
+			return "";
+		}
+		
+		Document contentsDoc = Jsoup.parse(strHtml);
+		
+		Elements imgElems = contentsDoc.select("img");
+		if (imgElems != null && imgElems.size() > 0) {
+			int elemCount = imgElems.size();
+			for (int i=0; i<elemCount; i++) {
+				Element imgElem = imgElems.get(i);
+				if (imgElem == null) {
+					continue;
+				}
+				
+				String oneImgSrc = imgElem.attr("src");
+				if (oneImgSrc == null || oneImgSrc.length() == 0) {
+					continue;
+				}
+				
+				if (oneImgSrc.indexOf("blogfiles.pstatic.net") > -1) {
+					// ì£¼ì†Œ ë’¤ì— "?type="ì´ ë¶™ì–´ìžˆì„ ê²½ìš° ë–¼ì–´ë‚¸ë‹¤.
+					String realImgUrl = oneImgSrc;
+					int paramTypeIndex = realImgUrl.indexOf("?type=");
+					if (paramTypeIndex > -1) {
+						realImgUrl = realImgUrl.substring(0, paramTypeIndex);
+					}
+					
+					// ì£¼ì†Œì—ì„œ í™•ìž¥ìžë§Œ ê°€ì ¸ì˜¨ë‹¤.
+					String fileExtOnly = "";
+					int lastSlashIndex = realImgUrl.lastIndexOf("/");
+					if (lastSlashIndex > -1) {
+						String lastSlice = realImgUrl.substring(lastSlashIndex + 1);
+						int lastDotIndex = lastSlice.lastIndexOf(".");
+						if (lastDotIndex > -1) {
+							fileExtOnly = lastSlice.substring(lastDotIndex + 1);
+						}
+					}
+					
+					if (fileExtOnly == null || fileExtOnly.length() == 0) {
+						fileExtOnly = "png";
+					}
+					
+					File dir = new File("C:\\wordpress_data\\imgs\\" + postNo + "\\");
+					if (dir.exists()) {
+						FolderUtil.deleteFolder(dir.getAbsolutePath());
+					}
+					
+					String savePath = "C:\\wordpress_data\\imgs\\" + postNo + "\\" + String.format("%04d", i + 1) + "." + fileExtOnly;
+					String newImgSrc = "/imgs/" + postNo + "/" + String.format("%04d", i + 1) + "." + fileExtOnly;
+					
+					if (ImageUtil.downloadImgFromUrl(realImgUrl, savePath)) {
+						strHtml = strHtml.replace(oneImgSrc, newImgSrc);
+					}
+				}
+			}
+		}
+		
+		return strHtml;
 	}
 }
