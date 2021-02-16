@@ -6,7 +6,7 @@ public class StringMapList extends ArrayList<StringMap> {
 	
 	
 	/**
-	 * Áßº¹ ¾øÀÌ Ãß°¡
+	 * ì¤‘ë³µ ì—†ì´ ì¶”ê°€
 	 * 
 	 * @param map
 	 * @param uniqueKey
@@ -59,7 +59,7 @@ public class StringMapList extends ArrayList<StringMap> {
 	
 	
 	/**
-	 * ¸®½ºÆ® ¼ø¼­ °Å²Ù·Î ¸¸µé¾î¼­ ¸®ÅÏ
+	 * ë¦¬ìŠ¤íŠ¸ ìˆœì„œ ê±°ê¾¸ë¡œ ë§Œë“¤ì–´ì„œ ë¦¬í„´
 	 * 
 	 * @return
 	 */

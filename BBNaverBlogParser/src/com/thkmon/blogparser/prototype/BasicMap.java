@@ -99,7 +99,7 @@ public class BasicMap extends HashMap<String, Object> {
 //    }
 	
 	/**
-	 * �썝�븯�뒗 key�뱾�쓣 ���긽�쑝濡� key-value 媛� 異쒕젰�릺�뒗 json�쓣 留뚮뱾�뼱�꽌 由ы꽩�븳�떎.
+	 * 원하는 key들을 대상으로 key-value 가 출력되는 json을 만들어서 리턴한다.
 	 * 
 	 * @param keys
 	 * @return
@@ -148,8 +148,8 @@ public class BasicMap extends HashMap<String, Object> {
 	}
 	
 	/**
-	 * 紐⑤뱺 key瑜� ���긽�쑝濡� key-value 媛� 異쒕젰�릺�뒗 json�쓣 留뚮뱾�뼱�꽌 由ы꽩�븳�떎.
-	 * �떒, 釉붾옓由ъ뒪�듃�뒗 �젣�쇅�맂�떎.
+	 * 모든 key를 대상으로 key-value 가 출력되는 json을 만들어서 리턴한다.
+	 * 단, 블랙리스트는 제외된다.
 	 * 
 	 * @return
 	 */
@@ -206,8 +206,8 @@ public class BasicMap extends HashMap<String, Object> {
 	}
 	
 	/**
-	 * �듅�젙 �궎瑜� 釉붾옓由ъ뒪�듃濡� 吏��젙�븳�떎.
-	 * 釉붾옓由ъ뒪�듃濡� 吏��젙�맂 �궎�뒗 toJson�쓣 �븷 �븣 �젣�쇅�맂�떎.
+	 * 특정 키를 블랙리스트로 지정한다.
+	 * 블랙리스트로 지정된 키는 toJson을 할 때 제외된다.
 	 * 
 	 * @param blackKey
 	 * @return
@@ -229,7 +229,7 @@ public class BasicMap extends HashMap<String, Object> {
 	}
 	
 	/**
-	 * 紐⑤뱺 key瑜� �돹�몴瑜� delimeter濡� �븯�뿬 �뀓�뒪�듃濡� 留뚮뱺�떎.
+	 * 모든 key를 쉼표를 delimeter로 하여 텍스트로 만든다.
 	 * @return
 	 */
 	public String getKeyListText() {

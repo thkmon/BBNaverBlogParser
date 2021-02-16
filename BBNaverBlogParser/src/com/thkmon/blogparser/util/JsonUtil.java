@@ -4,13 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * org.json.JSONObject ¶óÀÌºê·¯¸®´Â °£ÆíÇÏ°Ô json ÆÄ½ÌÀ» Áö¿øÇÏ³ª, ÇØ´çÇÏ´Â ¿ä¼Ò°¡ ¾øÀ» °æ¿ì ¿©Áö¾øÀÌ Exception
- * À» ¹ß»ý½ÃÅ²´Ù. µû¶ó¼­ ºÒÇÊ¿äÇÑ ¿À·ù°¡ ¹ß»ýÇÏÁö ¾Êµµ·Ï º» À¯Æ¿ Å¬·¡½º·Î °¨½Î¼­ »ç¿ë.
+ * org.json.JSONObject ë¼ì´ë¸ŒëŸ¬ë¦¬ëŠ” ê°„íŽ¸í•˜ê²Œ json íŒŒì‹±ì„ ì§€ì›í•˜ë‚˜, í•´ë‹¹í•˜ëŠ” ìš”ì†Œê°€ ì—†ì„ ê²½ìš° ì—¬ì§€ì—†ì´ Exception
+ * ì„ ë°œìƒì‹œí‚¨ë‹¤. ë”°ë¼ì„œ ë¶ˆí•„ìš”í•œ ì˜¤ë¥˜ê°€ ë°œìƒí•˜ì§€ ì•Šë„ë¡ ë³¸ ìœ í‹¸ í´ëž˜ìŠ¤ë¡œ ê°ì‹¸ì„œ ì‚¬ìš©.
  */
 public class JsonUtil {
 
 	/**
-	 * ¹®ÀÚ¿­À» json °´Ã¼·Î ÆÄ½Ì
+	 * ë¬¸ìžì—´ì„ json ê°ì²´ë¡œ íŒŒì‹±
 	 *
 	 * @param strJson
 	 * @return
@@ -28,7 +28,7 @@ public class JsonUtil {
 	}
 
 	/**
-	 * json °´Ã¼¿¡¼­ Æ¯Á¤Å°·Î json °´Ã¼ °¡Á®¿À±â
+	 * json ê°ì²´ì—ì„œ íŠ¹ì •í‚¤ë¡œ json ê°ì²´ ê°€ì ¸ì˜¤ê¸°
 	 *
 	 * @param jsonObj
 	 * @param key
@@ -47,7 +47,7 @@ public class JsonUtil {
 	}
 
 	/**
-	 * json °´Ã¼¿¡¼­ Æ¯Á¤Å°·Î json ¹è¿­ °¡Á®¿À±â
+	 * json ê°ì²´ì—ì„œ íŠ¹ì •í‚¤ë¡œ json ë°°ì—´ ê°€ì ¸ì˜¤ê¸°
 	 *
 	 * @param jsonObj
 	 * @param key
@@ -66,7 +66,7 @@ public class JsonUtil {
 	}
 
 	/**
-	 * json °´Ã¼¿¡¼­ Æ¯Á¤Å°·Î ¹®ÀÚ¿­ °¡Á®¿À±â
+	 * json ê°ì²´ì—ì„œ íŠ¹ì •í‚¤ë¡œ ë¬¸ìžì—´ ê°€ì ¸ì˜¤ê¸°
 	 *
 	 * @param jsonObj
 	 * @param key

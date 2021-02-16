@@ -187,7 +187,7 @@ public class SimpleDBMapper {
 //			quesIdx = query.indexOf("?");
 //		}
 		
-		// ·Î±×¿¡ Äõ¸® ¾µ ¶§ ¹°À½Ç¥ µÚ¿¡¼­ºÎÅÍ ¸ÅÇÎÇÏµµ·Ï ¼öÁ¤
+		// ë¡œê·¸ì— ì¿¼ë¦¬ ì“¸ ë•Œ ë¬¼ìŒí‘œ ë’¤ì—ì„œë¶€í„° ë§¤í•‘í•˜ë„ë¡ ìˆ˜ì •
 		if (objList != null && objList.size() > 0) {
 			int mapIdx = objList.size() - 1;
 			

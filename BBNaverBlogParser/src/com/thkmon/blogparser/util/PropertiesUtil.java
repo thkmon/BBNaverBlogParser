@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class PropertiesUtil {
 
     /**
-     * UTF-8 ÀÎÄÚµù Çü½ÄÀÇ properties ÆÄÀÏÀ» ÀĞ¾î¼­ HashMap °´Ã¼·Î ¸¸µé¾î ¸®ÅÏÇÑ´Ù.
+     * UTF-8 ì¸ì½”ë”© í˜•ì‹ì˜ properties íŒŒì¼ì„ ì½ì–´ì„œ HashMap ê°ì²´ë¡œ ë§Œë“¤ì–´ ë¦¬í„´í•œë‹¤.
      *
      * @param propFilePath
      * @return
@@ -47,7 +47,7 @@ public class PropertiesUtil {
                     continue;
                 }
                 
-                // ÁÖ¼® ¹«½Ã
+                // ì£¼ì„ ë¬´ì‹œ
                 if (oneLine.trim().startsWith("#")) {
                     continue;
                 }
@@ -57,11 +57,11 @@ public class PropertiesUtil {
                     continue;
                 }
                 
-                // ÁÂÃø°ª(key°ª)¸¸ trim Ã³¸®ÇÑ´Ù. ¿ìÃø°ª(value°ª)Àº ÀÇµµÀûÀ¸·Î °ø¹éÀÌ Æ÷ÇÔµÉ ¼ö ÀÖ´Ù°í ÆÇ´ÜÇÑ´Ù.
+                // ì¢Œì¸¡ê°’(keyê°’)ë§Œ trim ì²˜ë¦¬í•œë‹¤. ìš°ì¸¡ê°’(valueê°’)ì€ ì˜ë„ì ìœ¼ë¡œ ê³µë°±ì´ í¬í•¨ë  ìˆ˜ ìˆë‹¤ê³  íŒë‹¨í•œë‹¤.
                 String leftText = oneLine.substring(0, equalIndex).trim();
                 String rightText = oneLine.substring(equalIndex + 1);
                 
-                // µîÈ£ ÁÂÃø ÅØ½ºÆ®°¡ Á¸ÀçÇÏÁö ¾ÊÀ» °æ¿ì ¹«½Ã
+                // ë“±í˜¸ ì¢Œì¸¡ í…ìŠ¤íŠ¸ê°€ ì¡´ì¬í•˜ì§€ ì•Šì„ ê²½ìš° ë¬´ì‹œ
                 if (leftText.length() == 0) {
                     continue;
                 }
@@ -81,7 +81,7 @@ public class PropertiesUtil {
                     bufferedReader.close();
                 }
             } catch (Exception e) {
-                // ¹«½Ã
+                // ë¬´ì‹œ
             } finally {
                 bufferedReader = null;
             }
@@ -91,7 +91,7 @@ public class PropertiesUtil {
                     inputStreamReader.close();
                 }
             } catch (Exception e) {
-                // ¹«½Ã
+                // ë¬´ì‹œ
             } finally {
                 inputStreamReader = null;
             }
@@ -101,7 +101,7 @@ public class PropertiesUtil {
                     fileInputStream.close();
                 }
             } catch (Exception e) {
-                // ¹«½Ã
+                // ë¬´ì‹œ
             } finally {
                 fileInputStream = null;
             }

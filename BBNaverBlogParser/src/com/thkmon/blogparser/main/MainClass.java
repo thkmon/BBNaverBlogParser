@@ -20,18 +20,18 @@ public class MainClass {
 	private static final String wordpressUrl = Const.optionProperties.get("wordpress_url");
 	private static final int beginPageNum = 1;
 	private static final int endPageNum = 1;
-	private static final int countPerPage = 5; // 5, 10, 15, 20, 30 °¡´É
+	private static final int countPerPage = 5; // 5, 10, 15, 20, 30 ê°€ëŠ¥
 	
 	
 	public static void main(String[] args) {
 		try {
 			MainClass mainCls = new MainClass();
 			
-			// 1. ÃÖ±Ù Æ÷½ºÆ® ÀÎ¼­Æ® ±â´É
+			// 1. ìµœê·¼ í¬ìŠ¤íŠ¸ ì¸ì„œíŠ¸ ê¸°ëŠ¥
 			// mainCls.insertRecentPosts();
 			
-			// 2. Æ¯Á¤ Æ÷½ºÆ® ¾÷µ¥ÀÌÆ® ±â´É
-			// mainCls.updatePost("221166770752");
+			// 2. íŠ¹ì • í¬ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸ ê¸°ëŠ¥
+			// mainCls.updatePost("222237954742");
 			
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -43,7 +43,7 @@ public class MainClass {
 	
 	
 	/**
-	 * ÃÖ±Ù Æ÷½ºÆ® ÀÎ¼­Æ® ±â´É
+	 * ìµœê·¼ í¬ìŠ¤íŠ¸ ì¸ì„œíŠ¸ ê¸°ëŠ¥
 	 * 
 	 * @throws SQLException
 	 * @throws Exception
@@ -69,7 +69,7 @@ public class MainClass {
 	
 	
 	/**
-	 * Æ¯Á¤ Æ÷½ºÆ® ¾÷µ¥ÀÌÆ® ±â´É
+	 * íŠ¹ì • í¬ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸ ê¸°ëŠ¥
 	 * 
 	 * @param postNo
 	 * @throws SQLException
@@ -82,7 +82,7 @@ public class MainClass {
 	
 	
 	/**
-	 * Æ¯Á¤ ÆäÀÌÁöÀÇ Æ÷½ºÆ® Á¤º¸µéÀ» °¡Á®¿Â´Ù.
+	 * íŠ¹ì • í˜ì´ì§€ì˜ í¬ìŠ¤íŠ¸ ì •ë³´ë“¤ì„ ê°€ì ¸ì˜¨ë‹¤.
 	 * 
 	 * @param logNoList
 	 * @param pageNumber

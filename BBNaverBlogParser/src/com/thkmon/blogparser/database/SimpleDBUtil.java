@@ -28,7 +28,7 @@ public class SimpleDBUtil {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			
-			// µ¥ÀÌÅÍº£ÀÌ½º Ä¿³Ø¼Ç »ı¼º
+			// ë°ì´í„°ë² ì´ìŠ¤ ì»¤ë„¥ì…˜ ìƒì„±
 			conn = DriverManager.getConnection(jdbcUrl, Const.DB_USER, Const.DB_PASSWORD);
 			conn.setAutoCommit(false);
 			
