@@ -32,7 +32,7 @@ public class MainClass {
 			mainCls.insertRecentPosts();
 			
 			// 2. 특정 포스트 업데이트 기능
-			// mainCls.updatePost("70171023241");
+			// mainCls.updatePost("222250162215");
 			
 			// 블로그 이미지 경로가 포함되어있는 워드프레스 포스트들만 가져와서 내용 업데이트. 이미지 파일은 따로 FTP 업로드 해야함
 			// mainCls.updatePostHavingImages();

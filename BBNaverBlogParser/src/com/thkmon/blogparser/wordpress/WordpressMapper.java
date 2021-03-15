@@ -469,16 +469,17 @@ public class WordpressMapper {
 	 * @param strHtml
 	 * @return
 	 */
-	private String revisePostContents(String postNo, String strHtml) {
+	private String revisePostContents(String postNo, String strHtml) throws NullPointerException, Exception {
 		if (strHtml == null || strHtml.length() == 0) {
 			return "";
 		}
 		
-		String parentFolderPath = "C:\\wordpress_data\\imgs\\";
+		String parentFolderPath = "C:\\itarchives\\www\\imgs\\";
 		File parentFolderObj = new File(parentFolderPath);
 		if (!parentFolderObj.exists()) {
-			System.err.println("The folder does not exists. (" + parentFolderObj.getAbsolutePath() + ")");
-			return strHtml;
+			// System.err.println("The folder does not exists. (" + parentFolderObj.getAbsolutePath() + ")");
+			// return strHtml;
+			throw new Exception("The folder does not exists. (" + parentFolderObj.getAbsolutePath() + ")");
 		}
 		
 		File dir = new File(parentFolderPath + postNo + "\\");
@@ -502,7 +503,8 @@ public class WordpressMapper {
 					continue;
 				}
 				
-				if (oneImgSrc.indexOf("blogfiles.pstatic.net") > -1) {
+				// blogfiles.pstatic.net, dthumb-phinf.pstatic.net
+				if (oneImgSrc.indexOf(".pstatic.net") > -1) {
 					// 주소 뒤에 "?type="이 붙어있을 경우 떼어낸다.
 					String realImgUrl = oneImgSrc;
 					int paramTypeIndex = realImgUrl.indexOf("?type=");
