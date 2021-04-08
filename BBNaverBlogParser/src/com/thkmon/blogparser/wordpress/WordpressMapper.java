@@ -211,8 +211,13 @@ public class WordpressMapper {
 
 				boolean isInserted = mapper.insert(conn, query, objList);
 				System.out.println("isInserted ; " + isInserted);
+				
+				// 포스트 내용 부분 마지막에 광고 추가
+				if (isInserted) {
+					updateContentForAdvertisement(conn, String.valueOf(nextID));
+				}
 			}
-
+			
 			SimpleDBUtil.commitAndClose(conn);
 
 		} catch (SQLException e) {
@@ -395,6 +400,11 @@ public class WordpressMapper {
 
 				boolean isUpdated = mapper.insert(conn, query, objList);
 				System.out.println("isUpdated ; " + isUpdated);
+				
+				// 포스트 내용 부분 마지막에 광고 추가
+				if (isUpdated) {
+					updateContentForAdvertisement(conn, postID);
+				}
 			}
 
 			SimpleDBUtil.commitAndClose(conn);
@@ -538,5 +548,35 @@ public class WordpressMapper {
 		}
 		
 		return strHtml;
+	}
+	
+	
+	/**
+	 * 포스트 내용 부분 마지막에 광고 추가
+	 * 
+	 * @param conn
+	 * @param postID
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public boolean updateContentForAdvertisement(Connection conn, String postID) throws SQLException, Exception {
+		if (postID == null || postID.length() == 0) {
+			return false;
+		}
+		
+		SimpleDBMapper mapper = new SimpleDBMapper();
+		
+		StringBuffer sqlBuff = new StringBuffer();
+		sqlBuff.append(" update wp_posts ");
+		sqlBuff.append(" set post_content = ");
+		sqlBuff.append(" concat(post_content, '<!--쿠팡광고-->', '<br><script src=\"https://ads-partners.coupang.com/g.js\"></script><script>new PartnersCoupang.G({\"id\":461029,\"template\":\"carousel\",\"trackingCode\":\"AF3087228\",\"width\":\"680\",\"height\":\"140\"});</script>') ");
+		sqlBuff.append(" where id = ? ");
+		
+		ObjList objList = new ObjList();
+		objList.add(String.valueOf(postID));
+
+		int updateCount = mapper.update(conn, sqlBuff.toString(), objList);
+		return updateCount > 0 ? true : false;
 	}
 }
