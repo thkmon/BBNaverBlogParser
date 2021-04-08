@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.thkmon.blogparser.common.Const;
 import com.thkmon.blogparser.database.SimpleDBMapper;
 import com.thkmon.blogparser.database.SimpleDBUtil;
 import com.thkmon.blogparser.prototype.BasicMap;
@@ -428,6 +429,7 @@ public class WordpressMapper {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
+	/*
 	public StringList getPostNoListHavingBlogImages() throws SQLException, Exception {
 		StringList resultList = new StringList();
 		
@@ -470,6 +472,7 @@ public class WordpressMapper {
 		
 		return resultList;
 	}
+	*/
 	
 	
 	/**
@@ -484,7 +487,7 @@ public class WordpressMapper {
 			return "";
 		}
 		
-		String parentFolderPath = "C:\\itarchives\\www\\imgs\\";
+		String parentFolderPath = Const.POST_IMAGE_DIR_PATH;
 		File parentFolderObj = new File(parentFolderPath);
 		if (!parentFolderObj.exists()) {
 			// System.err.println("The folder does not exists. (" + parentFolderObj.getAbsolutePath() + ")");

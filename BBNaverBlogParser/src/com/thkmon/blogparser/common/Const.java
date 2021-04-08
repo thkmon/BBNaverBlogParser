@@ -13,4 +13,6 @@ public class Const {
 	
 	public static final String DB_USER = optionProperties.get("db_user");
 	public static final String DB_PASSWORD = optionProperties.get("db_password");
+	
+	public static final String POST_IMAGE_DIR_PATH = "C:\\itarchives\\www\\imgs\\";;
 }
