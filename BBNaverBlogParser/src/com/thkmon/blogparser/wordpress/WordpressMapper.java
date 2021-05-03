@@ -573,7 +573,7 @@ public class WordpressMapper {
 		StringBuffer sqlBuff = new StringBuffer();
 		sqlBuff.append(" update wp_posts ");
 		sqlBuff.append(" set post_content = ");
-		sqlBuff.append(" concat(post_content, '<!--쿠팡광고-->', '<br><script src=\"https://ads-partners.coupang.com/g.js\"></script><script>new PartnersCoupang.G({\"id\":461029,\"template\":\"carousel\",\"trackingCode\":\"AF3087228\",\"width\":\"680\",\"height\":\"140\"});</script>') ");
+		sqlBuff.append(" concat(post_content, '<!--쿠팡광고-->', '<br><script src=\"https://ads-partners.coupang.com/g.js\"></script><script>new PartnersCoupang.G({\"id\":461029,\"template\":\"carousel\",\"trackingCode\":\"AF3087228\",\"width\":\"680\",\"height\":\"140\"});</script><br>※ 파트너스 활동을 통해 일정액의 수수료를 제공받을 수 있음.') ");
 		sqlBuff.append(" where id = ? ");
 		
 		ObjList objList = new ObjList();
