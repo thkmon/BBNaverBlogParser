@@ -518,18 +518,20 @@ public class WordpressMapper {
 				
 				// blogfiles.pstatic.net, dthumb-phinf.pstatic.net
 				if (oneImgSrc.indexOf(".pstatic.net") > -1) {
-					// 주소 뒤에 "?type="이 붙어있을 경우 떼어낸다.
 					String realImgUrl = oneImgSrc;
-					int paramTypeIndex = realImgUrl.indexOf("?type=");
+					
+					// 주소 뒤에 "?type="이 붙어있을 경우 떼어낸다.
+					String imgUrl = realImgUrl;
+					int paramTypeIndex = imgUrl.indexOf("?");
 					if (paramTypeIndex > -1) {
-						realImgUrl = realImgUrl.substring(0, paramTypeIndex);
+						imgUrl = imgUrl.substring(0, paramTypeIndex);
 					}
 					
 					// 주소에서 확장자만 가져온다.
 					String fileExtOnly = "";
-					int lastSlashIndex = realImgUrl.lastIndexOf("/");
+					int lastSlashIndex = imgUrl.lastIndexOf("/");
 					if (lastSlashIndex > -1) {
-						String lastSlice = realImgUrl.substring(lastSlashIndex + 1);
+						String lastSlice = imgUrl.substring(lastSlashIndex + 1);
 						int lastDotIndex = lastSlice.lastIndexOf(".");
 						if (lastDotIndex > -1) {
 							fileExtOnly = lastSlice.substring(lastDotIndex + 1);
@@ -543,7 +545,18 @@ public class WordpressMapper {
 					String savePath = parentFolderPath + postNo + "\\" + String.format("%04d", i + 1) + "." + fileExtOnly;
 					String newImgSrc = "/imgs/" + postNo + "/" + String.format("%04d", i + 1) + "." + fileExtOnly;
 					
-					if (ImageUtil.downloadImgFromUrl(realImgUrl, savePath)) {
+					boolean idDownloaded = false;
+					
+					// 해상도 낮은 이미지 가져오지 않도록 개선.
+					if (!idDownloaded && realImgUrl.indexOf("?type=w80_blur") > -1) {
+						idDownloaded = ImageUtil.downloadImgFromUrl(realImgUrl.replace("?type=w80_blur", "?type=w1"), savePath);
+					}
+					
+					if (!idDownloaded) {
+						idDownloaded = ImageUtil.downloadImgFromUrl(realImgUrl, savePath);
+					}
+					
+					if (idDownloaded) {
 						strHtml = strHtml.replace(oneImgSrc, newImgSrc);
 					}
 				}
