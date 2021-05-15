@@ -12,10 +12,8 @@ import org.jsoup.select.Elements;
 import com.thkmon.blogparser.common.Const;
 import com.thkmon.blogparser.database.SimpleDBMapper;
 import com.thkmon.blogparser.database.SimpleDBUtil;
-import com.thkmon.blogparser.prototype.BasicMap;
-import com.thkmon.blogparser.prototype.BasicMapList;
+import com.thkmon.blogparser.main.JSchWrapper;
 import com.thkmon.blogparser.prototype.ObjList;
-import com.thkmon.blogparser.prototype.StringList;
 import com.thkmon.blogparser.prototype.StringMap;
 import com.thkmon.blogparser.util.FolderUtil;
 import com.thkmon.blogparser.util.ImageUtil;
@@ -47,6 +45,11 @@ public class WordpressMapper {
 
 		String postNo = targetMap.get("logNo");
 		if (postNo == null || postNo.length() == 0) {
+			return;
+		}
+		
+		// 포스트넘버가 숫자인 경우에만 진행
+		if (!postNo.matches("[0-9]*")) {
 			return;
 		}
 
@@ -213,9 +216,9 @@ public class WordpressMapper {
 				boolean isInserted = mapper.insert(conn, query, objList);
 				System.out.println("isInserted ; " + isInserted);
 				
-				// 포스트 내용 부분 마지막에 광고 추가
+				// SFTP 로 이미지 업로드
 				if (isInserted) {
-					updateContentForAdvertisement(conn, String.valueOf(nextID));
+					uploadImagesBySFTP(postNo);
 				}
 			}
 			
@@ -252,6 +255,11 @@ public class WordpressMapper {
 		}
 		
 		if (postNo == null || postNo.length() == 0) {
+			return;
+		}
+		
+		// 포스트넘버가 숫자인 경우에만 진행
+		if (!postNo.matches("[0-9]*")) {
 			return;
 		}
 		
@@ -402,9 +410,9 @@ public class WordpressMapper {
 				boolean isUpdated = mapper.insert(conn, query, objList);
 				System.out.println("isUpdated ; " + isUpdated);
 				
-				// 포스트 내용 부분 마지막에 광고 추가
+				// SFTP 로 이미지 업로드
 				if (isUpdated) {
-					updateContentForAdvertisement(conn, postID);
+					uploadImagesBySFTP(postNo);
 				}
 			}
 
@@ -474,6 +482,46 @@ public class WordpressMapper {
 	}
 	*/
 	
+	/*
+	public StringList getPostNoListAll() throws SQLException, Exception {
+		StringList resultList = new StringList();
+		
+		Connection conn = null;
+		SimpleDBMapper mapper = new SimpleDBMapper();
+		
+		try {
+			conn = SimpleDBUtil.getConnection();
+			
+			String query = " SELECT post_name, post_content FROM wp_posts ";
+
+			BasicMapList list = mapper.select(conn, query, null);
+			if (list != null && list.size() > 0) {
+				BasicMap map = null;
+				
+				int listCount = list.size();
+				for (int i=0; i<listCount; i++) {
+					map = list.get(i);
+					if (map == null) {
+						continue;
+					}
+					
+					resultList.add(String.valueOf(map.get("post_name")));
+				}
+			}
+			
+		} catch (SQLException e) {
+			throw e;
+			
+		} catch (Exception e) {
+			throw e;
+
+		} finally {
+			SimpleDBUtil.rollbackAndClose(conn);
+		}
+		
+		return resultList;
+	}
+	*/
 	
 	/**
 	 * 포스트 내용 보정 (이미지 상대경로화)
@@ -568,31 +616,76 @@ public class WordpressMapper {
 	
 	
 	/**
-	 * 포스트 내용 부분 마지막에 광고 추가
+	 * SFTP 로 이미지 업로드
 	 * 
-	 * @param conn
-	 * @param postID
+	 * @param postNo
 	 * @return
-	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public boolean updateContentForAdvertisement(Connection conn, String postID) throws SQLException, Exception {
-		if (postID == null || postID.length() == 0) {
+	public boolean uploadImagesBySFTP(String postNo) throws Exception {
+		String parentFolderPath = Const.POST_IMAGE_DIR_PATH;
+		File parentFolderObj = new File(parentFolderPath);
+		if (!parentFolderObj.exists()) {
 			return false;
 		}
 		
-		SimpleDBMapper mapper = new SimpleDBMapper();
+		File dir = new File(parentFolderPath + postNo + "\\");
+		if (!dir.exists()) {
+			return false;
+		}
 		
-		StringBuffer sqlBuff = new StringBuffer();
-		sqlBuff.append(" update wp_posts ");
-		sqlBuff.append(" set post_content = ");
-		sqlBuff.append(" concat(post_content, '<!--쿠팡광고-->', '<br><script src=\"https://ads-partners.coupang.com/g.js\"></script><script>new PartnersCoupang.G({\"id\":461029,\"template\":\"carousel\",\"trackingCode\":\"AF3087228\",\"width\":\"680\",\"height\":\"140\"});</script><br>※ 파트너스 활동을 통해 일정액의 수수료를 제공받을 수 있음.') ");
-		sqlBuff.append(" where id = ? ");
+		File[] fileArr = dir.listFiles();
+		if (fileArr == null || fileArr.length == 0) {
+			return false;
+		}
 		
-		ObjList objList = new ObjList();
-		objList.add(String.valueOf(postID));
+		JSchWrapper jschWrapper = null;
+		
+		int totalFileCount = 0;
+		int uploadedFileCount = 0;
+		
+		try {
+			jschWrapper = new JSchWrapper();
+			
+			// SFTP 접속하기
+			jschWrapper.connectSFTP(Const.FTP_URL, Const.FTP_PORT, Const.FTP_USER, Const.FTP_PASSWORD);
+			
+			String ftpImageDirPath = Const.FTP_TMPDIR;
+			if (ftpImageDirPath == null || ftpImageDirPath.length() == 0) {
+				return false;
+			}
+			
+			// 폴더 생성
+			jschWrapper.mkdir(ftpImageDirPath, postNo);
+			
+			File oneFile = null;
+			totalFileCount = fileArr.length;
+			for (int i=0; i<totalFileCount; i++) {
+				oneFile = fileArr[i];
+				if (oneFile == null || !oneFile.exists()) {
+					continue;
+				}
+				
+				// 파일 업로드
+				boolean isSuccess = jschWrapper.uploadFile(oneFile.getAbsolutePath(), ftpImageDirPath + "/" + postNo);
+				if (isSuccess) {
+					uploadedFileCount++;
+				}
+			}
+			
+		} catch (Exception e) {
+			throw e;
 
-		int updateCount = mapper.update(conn, sqlBuff.toString(), objList);
-		return updateCount > 0 ? true : false;
+		} finally {
+			// SFTP 접속해제
+			jschWrapper.disconnectSFTP();
+		}
+		
+		if (uploadedFileCount == totalFileCount && totalFileCount > 0) {
+			FolderUtil.deleteFolder(dir.getAbsolutePath());
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

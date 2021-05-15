@@ -29,12 +29,15 @@ public class MainClass {
 			MainClass mainCls = new MainClass();
 			
 			// 1. 최근 포스트 인서트 기능
-//			mainCls.insertRecentPosts();
+			mainCls.insertRecentPosts();
 			
 			// 2. 특정 포스트 업데이트 기능
-			 mainCls.updatePost("222250162215");
+			// mainCls.updatePost("221589281709");
 			
-			// 블로그 이미지 경로가 포함되어있는 워드프레스 포스트들만 가져와서 내용 업데이트. 이미지 파일은 따로 FTP 업로드 해야함
+			// 블로그 이미지 경로가 포함되어있는 워드프레스 포스트들만 가져와서 내용 업데이트
+			// mainCls.updatePostHavingImages();
+			
+			// 모든 워드프레스 포스트 내용 업데이트
 			// mainCls.updatePostHavingImages();
 			
 		} catch (NullPointerException e) {
@@ -87,7 +90,7 @@ public class MainClass {
 	
 	
 	/**
-	 * 블로그 이미지 경로가 포함되어있는 워드프레스 포스트들만 가져와서 내용 업데이트. 이미지 파일은 따로 FTP 업로드 해야함
+	 * 블로그 이미지 경로가 포함되어있는 워드프레스 포스트들만 가져와서 내용 업데이트
 	 * 
 	 * @throws SQLException
 	 * @throws Exception
@@ -96,6 +99,29 @@ public class MainClass {
 	private void updatePostHavingImages() throws SQLException, Exception {
 		WordpressMapper wordpressMapper = new WordpressMapper();
 		StringList postNoList = wordpressMapper.getPostNoListHavingBlogImages();
+		if (postNoList != null) {
+			System.out.println("postNoList.size() : " + postNoList.size());
+			if (postNoList.size() > 0) {
+				System.out.println("postNoList : " + postNoList);
+				for (String postNo : postNoList) {
+					this.updatePost(postNo);
+				}
+			}
+		}
+	}
+	*/
+	
+	
+	/**
+	 * 모든 워드프레스 포스트 내용 업데이트
+	 * 
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	/*
+	private void updatePostHavingImages() throws SQLException, Exception {
+		WordpressMapper wordpressMapper = new WordpressMapper();
+		StringList postNoList = wordpressMapper.getPostNoListAll();
 		if (postNoList != null) {
 			System.out.println("postNoList.size() : " + postNoList.size());
 			if (postNoList.size() > 0) {
