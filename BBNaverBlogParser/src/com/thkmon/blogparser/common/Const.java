@@ -6,7 +6,7 @@ import com.thkmon.blogparser.util.PropertiesUtil;
 import com.thkmon.blogparser.util.StringUtil;
 
 public class Const {
-	public static final HashMap<String, String> optionProperties = PropertiesUtil.readPropertiesFile("/test/option.properties");
+	public static final HashMap<String, String> optionProperties = PropertiesUtil.readPropertiesFile("/home/blogparser/config/option.properties");
 	
 	public static final String DB_URL = optionProperties.get("db_url");
 	public static final String DB_PORT = optionProperties.get("db_port");

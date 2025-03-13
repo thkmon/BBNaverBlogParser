@@ -18,7 +18,7 @@ import com.thkmon.blogparser.wordpress.WordpressMapper;
 public class MainClass {
 
 	private static final String naverUserId = Const.optionProperties.get("naver_user_id");
-	private static final String wordpressUrl = Const.optionProperties.get("wordpress_url");
+	private static final String wordpressUrl = Const.optionProperties.get("wordpress_url"); // ex) http://ckr.kr
 	private static final int beginPageNum = 1;
 	private static final int endPageNum = 1;
 	private static final int countPerPage = 5; // 5, 10, 15, 20, 30 가능
